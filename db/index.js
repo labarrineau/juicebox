@@ -14,8 +14,8 @@
 
                return rows;
    } catch(error){
-	console.error("getAllUsers Function Error!");
-	throw(error)
+
+	throw Error(`getAllUsers Function Error! ${error.message}`)
    }
 }
 
@@ -35,6 +35,20 @@ async function getAllPosts() {
 			  }
 
 
+async function getAllTags() {
+	try {
+		
+		const { rows } = await client.query(
+			`SELECT * 
+			 FROM tags
+				  `);
+	 
+					return rows;
+	} catch (error) {
+		console.error("GetAllPosts Function Error!");
+	  throw error;
+	}
+  }
 async function createUser({ 
 	username, 
 	password,
@@ -89,34 +103,28 @@ async function createPost({
 			if (tagList.length === 0) { 
 			return; 
 			}
-		
-			// need something like: $1), ($2), ($3 
+	
 			const insertValues = tagList.map(
 			(_, index) => `$${index + 1}`).join('), (');
-			// then we can use: (${ insertValues }) in our string template
-		
-			// need something like $1, $2, $3
+
 			const selectValues = tagList.map(
 			(_, index) => `$${index + 1}`).join(', ');
-			// then we can use (${ selectValues }) in our string template
 		
 			try {
-				// insert the tags, doing nothing on conflict
-				// returning nothing, we'll query after
+
 				await client.query (`
 					INSERT INTO tags(name)
 					VALUES (${insertValues})
 					ON CONFLICT (name) DO NOTHING;
 				`, tagList )
 
-			// select all tags where the name is in our taglist
+			
 			const { rows } = await client.query (`
-					SELECT * from tags 
+					SELECT * FROM tags 
 					WHERE name
 					IN (${selectValues});
 				`, tagList )
 		
-			// return the rows from the query
 			return rows;
 		} catch (error) {
 		throw error;
@@ -150,11 +158,10 @@ async function createPost({
   }
 
 async function updateUser(id, fields = {}) {
-	 // build the set string
+
 	   const setString = Object.keys(fields).map(
 	   (key, index) => `"${ key }"=$${ index + 1 }`
 	    ).join(', ');
-	  // return early if this is called without fields
 	   if (setString.length === 0) {
 	    return;
 	  }
@@ -175,10 +182,9 @@ async function updateUser(id, fields = {}) {
 
 async function updatePost(postId, fields = {}) {
 
-	const { tags } = fields; // might be undefined
+	const { tags } = fields; 
 	delete fields.tags;
 
-	// build the set string
 	const setString = Object.keys(fields).map(
 	  (key, index) => `"${ key }"=$${ index + 1 }`
 	).join(', ');
@@ -323,6 +329,7 @@ async function getPostsByTagName(tagName) {
 		  	 createPost,
 			 updatePost,
 		  	 getAllPosts,
+			 getAllTags,  
 			 getUserById,
 			 getPostsByUser,
 			 addTagsToPost,

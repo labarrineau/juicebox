@@ -24,14 +24,15 @@ const {
 					name:'Al Bert',
 					location: 'Sidney, Austrailia'});
 
-		await createUser({ 	username: 'sandra', 
+		    await createUser({ 	username: 'sandra', 
 					password: '2sandy4me',
 					name:'Just Sandra',
 					location: "Ain't Tellin'"});
 
-		await createUser({ 	username: 'glamgal', 
+		    await createUser({ 	
+                    username: 'glamgal', 
 					password: 'soglam',
-               				name: 'Joshua',
+               			name: 'Joshua',
 			   		location: 'Upper East Side'});
 
 		console.log("Finished creating users!");
@@ -108,14 +109,14 @@ async function createTables() {
                console.log("Starting to build tables...");
                
 		await client.query(`
-                        CREATE TABLE users (
+                    CREATE TABLE users (
                         id 		SERIAL 		PRIMARY KEY,
                         username 	varchar(255) 	UNIQUE 		NOT NULL,
                         password 	varchar(255) 			NOT NULL,
                         name 		varchar(255) 			NOT NULL,
 			            location 	varchar(255) 			NOT NULL,
 			            active 		BOOLEAN 	DEFAULT true
-			);
+			        );
 
                CREATE TABLE posts (
                     id          SERIAL      PRIMARY KEY, 
