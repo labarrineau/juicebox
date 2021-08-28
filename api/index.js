@@ -41,7 +41,6 @@ apiRouter.use(async (req, res, next) => {
   
   apiRouter.use((req, res, next) => {
     if (req.user) {
-      console.log("User is set:", req.user);
     }
   
     next();
@@ -52,18 +51,8 @@ apiRouter.use('/posts', postsRouter);
 apiRouter.use('/tags', tagsRouter);
 
 
-// fetch('our api url', {
-//     method: 'SOME_METHOD',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Authorization': 'Bearer HOLYMOLEYTHISTOKENISHUGE'
-//     },
-//     body: JSON.stringify({})
-//   })
-
 apiRouter.use((error, req, res, next) => {
     res.send(error);
-
   });
   
 
